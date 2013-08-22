@@ -11,10 +11,16 @@ import urllib2
 import json
 
 searchTerm = ''
-searchTerm = searchTerm.replace(' ','%20')
 imageList = []
 
-def main(searchTerm = '', endRange = 5):
+# Default: Request a search term, iterate 5 times and do not print URLs
+def main(searchTerm = '', endRange = 5, printResults = False):
+	
+	# Ensure a search term has been specified
+	if searchTerm is '':
+		print 'No search term supplied'
+		return #Terminate Execution
+
 	count = 0
 
 	for i in range(0,endRange):
@@ -33,14 +39,22 @@ def main(searchTerm = '', endRange = 5):
 		    for myUrl in dataInfo:
 		        count = count + 1
 		        imageUrl = myUrl['unescapedUrl']
-		        print myUrl['unescapedUrl']
+
+		        if printResults is True:
+		       		# Used for debugging or printing image urls
+		        	print myUrl['unescapedUrl'] 
+
+		        # Append image url to the array
 		        imageList.append(imageUrl)
 
 		    # Sleep for one second to prevent IP blocking from Google
 		    time.sleep(1)
 
 		except:
+			# Skip iteration if an error occurs - most likely a TypeError from an empty JSON result set
 			continue
+
+	return imageList
 
 if __name__=="__main__":
 	main()
